@@ -206,3 +206,10 @@ describe("remove", function () {
     }
   });
 });
+
+describe("User's company query", () => {
+  test("name", async () => {
+    const res = await Company.search('name', 'C1');
+    expect(res.rows).toEqual([{name : 'C1'}]);
+  });
+});
