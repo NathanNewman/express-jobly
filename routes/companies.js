@@ -5,7 +5,7 @@
 const jsonschema = require("jsonschema");
 const express = require("express");
 
-const { BadRequestError } = require("../expressError");
+const { BadRequestError, ExpressError } = require("../expressError");
 const { ensureLoggedIn } = require("../middleware/auth");
 const Company = require("../models/company");
 
@@ -57,7 +57,8 @@ router.get("/", async function (req, res, next) {
   if (req.body.type) {
     try {
       const result = await Company.search(req.body.type, req.body.name);
-      return res.send(result);
+      if (result.length) return res.send(result);
+      throw new ExpressError("Not found", 404);
     } catch (err) {
       return next(err);
     }
