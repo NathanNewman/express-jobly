@@ -138,10 +138,6 @@ class Company {
   }
 
   static async search(type, str) {
-    if (type === !'name' || !'minEmployees' || !'maxEmployees')
-      throw new BadRequestError(
-        "Type of search not properly defined. Must be either name, minEmployees, or maxEmployees"
-      );
     if (type === "name") {
       return await db.query(
         `SELECT name
@@ -151,19 +147,19 @@ class Company {
       );
     } else if (type === "minEmployees") {
       return await db.query(
-        `SELECT name, employees
+        `SELECT name, num_employees
         FROM companies
-        ORDER BY employees
+        ORDER BY num_employees
         LIMIT 1`
       );
-    } else {
+    } else if (type === "maxEmployees") {
       return await db.query(
-        `SELECT name, employees
+        `SELECT name, num_employees
         FROM companies
-        ORDER BY employees DESC
+        ORDER BY num_employees DESC
         LIMIT 1`
       );
-    }
+    } else throw new BadRequestError("Invalid input!");
   }
 }
 

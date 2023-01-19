@@ -31,9 +31,10 @@ describe("create", function () {
     expect(company).toEqual(newCompany);
 
     const result = await db.query(
-          `SELECT handle, name, description, num_employees, logo_url
+      `SELECT handle, name, description, num_employees, logo_url
            FROM companies
-           WHERE handle = 'new'`);
+           WHERE handle = 'new'`
+    );
     expect(result.rows).toEqual([
       {
         handle: "new",
@@ -129,16 +130,19 @@ describe("update", function () {
     });
 
     const result = await db.query(
-          `SELECT handle, name, description, num_employees, logo_url
+      `SELECT handle, name, description, num_employees, logo_url
            FROM companies
-           WHERE handle = 'c1'`);
-    expect(result.rows).toEqual([{
-      handle: "c1",
-      name: "New",
-      description: "New Description",
-      num_employees: 10,
-      logo_url: "http://new.img",
-    }]);
+           WHERE handle = 'c1'`
+    );
+    expect(result.rows).toEqual([
+      {
+        handle: "c1",
+        name: "New",
+        description: "New Description",
+        num_employees: 10,
+        logo_url: "http://new.img",
+      },
+    ]);
   });
 
   test("works: null fields", async function () {
@@ -156,16 +160,19 @@ describe("update", function () {
     });
 
     const result = await db.query(
-          `SELECT handle, name, description, num_employees, logo_url
+      `SELECT handle, name, description, num_employees, logo_url
            FROM companies
-           WHERE handle = 'c1'`);
-    expect(result.rows).toEqual([{
-      handle: "c1",
-      name: "New",
-      description: "New Description",
-      num_employees: null,
-      logo_url: null,
-    }]);
+           WHERE handle = 'c1'`
+    );
+    expect(result.rows).toEqual([
+      {
+        handle: "c1",
+        name: "New",
+        description: "New Description",
+        num_employees: null,
+        logo_url: null,
+      },
+    ]);
   });
 
   test("not found if no such company", async function () {
@@ -193,7 +200,8 @@ describe("remove", function () {
   test("works", async function () {
     await Company.remove("c1");
     const res = await db.query(
-        "SELECT handle FROM companies WHERE handle='c1'");
+      "SELECT handle FROM companies WHERE handle='c1'"
+    );
     expect(res.rows.length).toEqual(0);
   });
 
@@ -209,7 +217,23 @@ describe("remove", function () {
 
 describe("User's company query", () => {
   test("name", async () => {
-    const res = await Company.search('name', 'C1');
-    expect(res.rows).toEqual([{name : 'C1'}]);
+    const res = await Company.search("name", "C1");
+    expect(res.rows).toEqual([{ name: "C1" }]);
+  });
+  test("minEmployees", async () => {
+    const res = await Company.search("minEmployees");
+    expect(res.rows).toEqual([{ name: "C1", num_employees: 1 }]);
+  });
+  test("maxEmployees", async () => {
+    const res = await Company.search("maxEmployees");
+    expect(res.rows).toEqual([{ name: "C3", num_employees: 3 }]);
+  });
+  test("Invalid Input", async () => {
+    try {
+      const res = await Company.search("id");
+      fail();
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
   });
 });
