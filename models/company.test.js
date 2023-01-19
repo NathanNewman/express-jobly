@@ -218,15 +218,15 @@ describe("remove", function () {
 describe("User's company query", () => {
   test("name", async () => {
     const res = await Company.search("name", "C1");
-    expect(res.rows).toEqual([{ name: "C1" }]);
+    expect(res).toEqual([{ name: "C1" }]);
   });
   test("minEmployees", async () => {
     const res = await Company.search("minEmployees");
-    expect(res.rows).toEqual([{ name: "C1", num_employees: 1 }]);
+    expect(res).toEqual([{ name: "C1", num_employees: 1 }]);
   });
   test("maxEmployees", async () => {
     const res = await Company.search("maxEmployees");
-    expect(res.rows).toEqual([{ name: "C3", num_employees: 3 }]);
+    expect(res).toEqual([{ name: "C3", num_employees: 3 }]);
   });
   test("Invalid Input", async () => {
     try {

@@ -138,27 +138,30 @@ class Company {
   }
 
   static async search(type, str) {
-    if (type === "name") {
-      return await db.query(
-        `SELECT name
-        FROM companies
-        WHERE name LIKE $1`,
-        [`%${str}%`]
-      );
-    } else if (type === "minEmployees") {
-      return await db.query(
+    if (type === "minEmployees") {
+      const result = await db.query(
         `SELECT name, num_employees
         FROM companies
         ORDER BY num_employees
         LIMIT 1`
       );
+      return result.rows
     } else if (type === "maxEmployees") {
-      return await db.query(
+      const result = await db.query(
         `SELECT name, num_employees
         FROM companies
         ORDER BY num_employees DESC
         LIMIT 1`
       );
+      return result.rows
+    } else if (type === "name") {
+      const result = await db.query(
+        `SELECT name
+          FROM companies
+          WHERE name ILIKE $1`,
+        [`%${str}%`]
+      );
+      return result.rows
     } else throw new BadRequestError("Invalid input!");
   }
 }
