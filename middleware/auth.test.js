@@ -82,19 +82,20 @@ describe("ensureLoggedIn", function () {
  *
  */
 describe("isAdmin", () => {
+  const req = {};
   test("Should call next if user is admin", () => {
-    const req = {};
     const res = { locals: { user: { is_admin: true } } };
     // jest.fn() creates a new mock function so that there is a next function to call.
+    // it's not really important to the test what next is, just so long as it's been called.
     const next = jest.fn();
     isAdmin(req, res, next);
     expect(next).toHaveBeenCalled();
   });
   test("Should throw Unauthorized Error if user is not admin", () => {
-    const req = {};
     const res = { locals: { user: { is_admin: false } } };
-    const next = jest.fn();
-
-    expect(() => isAdmin(req, res, next)).toThrow(UnauthorizedError);
+    const next = function (err) {
+      expect(err instanceof UnauthorizedError).toBeTruthy();
+    };
+    isAdmin(req, res, next);
   });
 });
