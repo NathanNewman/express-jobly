@@ -114,7 +114,7 @@ describe("GET /companies", function () {
   test("GET /companies Company.search() by minEmployees", async () => {
     const resp = await request(app)
       .get("/companies")
-      .send({ type: "minEmployees"});
+      .send({ type: "minEmployees" });
     expect(resp.statusCode).toBe(200);
     expect(resp.body).toEqual([{ name: "C1", num_employees: 1 }]);
   });
@@ -122,7 +122,7 @@ describe("GET /companies", function () {
   test("GET /companies Company.search() by maxEmployees", async () => {
     const resp = await request(app)
       .get("/companies")
-      .send({ type: "maxEmployees"});
+      .send({ type: "maxEmployees" });
     expect(resp.statusCode).toBe(200);
     expect(resp.body).toEqual([{ name: "C3", num_employees: 3 }]);
   });
@@ -237,9 +237,11 @@ describe("PATCH /companies/:handle", function () {
 
 describe("DELETE /companies/:handle", function () {
   test("works for users", async function () {
+    const user = { is_admin: true };
     const resp = await request(app)
       .delete(`/companies/c1`)
-      .set("authorization", `Bearer ${u1Token}`);
+      .set("authorization", `Bearer ${u1Token}`)
+      .set("Cookie", [`user=${JSON.stringify(user)}`]);
     expect(resp.body).toEqual({ deleted: "c1" });
   });
 
