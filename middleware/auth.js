@@ -48,8 +48,6 @@ function ensureLoggedIn(req, res, next) {
  */
 
 function isAdmin(req, res, next) {
-  console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-  console.log(res.locals.user.isAdmin);
   try {
     if (!res.locals.user.isAdmin) throw new UnauthorizedError();
     return next();

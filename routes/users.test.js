@@ -49,82 +49,82 @@ describe("POST /users", function () {
   });
 });
 
-  test("works for users: create admin", async function () {
-    const resp = await request(app)
-      .post("/users")
-      .send({
-        username: "u-new",
-        firstName: "First-new",
-        lastName: "Last-newL",
-        password: "password-new",
-        email: "new@email.com",
-        isAdmin: true,
-      })
-      .set("authorization", `Bearer ${u2Token}`);
-    expect(resp.statusCode).toEqual(201);
-    expect(resp.body).toEqual({
-      user: {
-        username: "u-new",
-        firstName: "First-new",
-        lastName: "Last-newL",
-        email: "new@email.com",
-        isAdmin: true,
-      },
-      token: expect.any(String),
-    });
-  });
-
-  test("unauth for anon", async function () {
-    const resp = await request(app).post("/users").send({
+test("works for users: create admin", async function () {
+  const resp = await request(app)
+    .post("/users")
+    .send({
       username: "u-new",
       firstName: "First-new",
       lastName: "Last-newL",
       password: "password-new",
       email: "new@email.com",
       isAdmin: true,
-    });
-    expect(resp.statusCode).toEqual(401);
+    })
+    .set("authorization", `Bearer ${u2Token}`);
+  expect(resp.statusCode).toEqual(201);
+  expect(resp.body).toEqual({
+    user: {
+      username: "u-new",
+      firstName: "First-new",
+      lastName: "Last-newL",
+      email: "new@email.com",
+      isAdmin: true,
+    },
+    token: expect.any(String),
   });
+});
 
-  test("bad request if missing data", async function () {
-    const resp = await request(app)
-      .post("/users")
-      .send({
-        username: "u-new",
-      })
-      .set("authorization", `Bearer ${u2Token}`);
-    expect(resp.statusCode).toEqual(400);
+test("unauth for anon", async function () {
+  const resp = await request(app).post("/users").send({
+    username: "u-new",
+    firstName: "First-new",
+    lastName: "Last-newL",
+    password: "password-new",
+    email: "new@email.com",
+    isAdmin: true,
   });
+  expect(resp.statusCode).toEqual(401);
+});
 
-  test("bad request if invalid data", async function () {
-    const resp = await request(app)
-      .post("/users")
-      .send({
-        username: "u-new",
-        firstName: "First-new",
-        lastName: "Last-newL",
-        password: "password-new",
-        email: "not-an-email",
-        isAdmin: true,
-      })
-      .set("authorization", `Bearer ${u2Token}`);
-    expect(resp.statusCode).toEqual(400);
-  });
+test("bad request if missing data", async function () {
+  const resp = await request(app)
+    .post("/users")
+    .send({
+      username: "u-new",
+    })
+    .set("authorization", `Bearer ${u2Token}`);
+  expect(resp.statusCode).toEqual(400);
+});
 
-  // New Test
-  test("works for users: create non-admin", async function () {
-    const resp = await request(app)
-      .post("/users")
-      .send({
-        username: "u-new",
-        firstName: "First-new",
-        lastName: "Last-newL",
-        password: "password-new",
-        email: "new@email.com",
-        isAdmin: false,
-      })
-      .set("authorization", `Bearer ${u1Token}`);
-    expect(resp.statusCode).toEqual(401);
+test("bad request if invalid data", async function () {
+  const resp = await request(app)
+    .post("/users")
+    .send({
+      username: "u-new",
+      firstName: "First-new",
+      lastName: "Last-newL",
+      password: "password-new",
+      email: "not-an-email",
+      isAdmin: true,
+    })
+    .set("authorization", `Bearer ${u2Token}`);
+  expect(resp.statusCode).toEqual(400);
+});
+
+// New Test
+test("works for users: create non-admin", async function () {
+  const resp = await request(app)
+    .post("/users")
+    .send({
+      username: "u-new",
+      firstName: "First-new",
+      lastName: "Last-newL",
+      password: "password-new",
+      email: "new@email.com",
+      isAdmin: false,
+    })
+    .set("authorization", `Bearer ${u1Token}`);
+  expect(resp.statusCode).toEqual(401);
 });
 
 /************************************** GET /users */
