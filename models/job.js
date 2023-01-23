@@ -7,8 +7,7 @@ const { sqlForPartialUpdate } = require("../helpers/sql");
 /** related functions for jobs. */
 
 class Job {
-
-    /** Create a job (from data), update db, return new job data.
+  /** Create a job (from data), update db, return new job data.
    *
    * data should be { id, title, salary, equity, company_handle }
    *
@@ -16,14 +15,19 @@ class Job {
    *
    * Throws BadRequestError if job already in database.
    * */
-  static async create (title, salary, equity, company_handle) {
-      const result = await db.query(
-        `INSERT INTO jobs
+  static async create(title, salary, equity, companyHandle) {
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+    console.log(`${title} : ${salary} : ${equity} : ${companyHandle}`);
+    const result = await db.query(
+      `INSERT INTO jobs
              (title, salary, equity, company_handle)
-             VALUES ($1, $2, $3, $4, $5)
+             VALUES ($1, $2, $3, $4)
              RETURNING id, title, salary, equity, company_handle AS "companyHandle"`,
-        [title, salary, equity, company_handle]
-      );
-      return result.rows[0];
+      [title, salary, equity, companyHandle]
+    );
+    console.log(result.rows[0]);
+    return result.rows[0];
   }
 }
+
+module.exports = Job;
