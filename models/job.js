@@ -16,8 +16,6 @@ class Job {
    * Throws BadRequestError if job already in database.
    * */
   static async create({title, salary, equity, companyHandle}) {
-    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-    console.log(equity);
     const result = await db.query(
       `INSERT INTO jobs
              (title, salary, equity, company_handle)

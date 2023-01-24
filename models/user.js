@@ -138,6 +138,9 @@ class User {
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
+    const jobs = await User.jobs(username);
+    user.jobs = jobs
+
     return user;
   }
 
@@ -190,7 +193,7 @@ class User {
   /** Delete given user from database; returns undefined. */
 
   static async remove(username) {
-    let result = await db.query(
+    const result = await db.query(
       `DELETE
            FROM users
            WHERE username = $1
@@ -201,6 +204,30 @@ class User {
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
   }
+
+  static async apply(username, jobId) {
+    const result = await db.query(
+      `INSERT INTO applications
+      (username, job_id)
+      VALUES ($1, $2)
+      RETURNING username, job_id`,
+      [username, jobId]
+    );
+    return { applied: jobId };
+  }
+
+  static async jobs(username) {
+    const results = await db.query(
+      `SELECT job_id AS "jobId"
+      FROM applications
+      WHERE username = $1`,
+      [username]
+    );
+    console.log(results.rows);
+    return results.rows;
+  }
 }
 
 module.exports = User;
+
+

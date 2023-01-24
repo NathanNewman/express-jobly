@@ -5,6 +5,7 @@ const request = require("supertest");
 const db = require("../db.js");
 const app = require("../app");
 const User = require("../models/user");
+const Job = require("../models/job.js");
 
 const {
   commonBeforeAll,
@@ -192,6 +193,7 @@ describe("GET /users/:username", function () {
         lastName: "U1L",
         email: "user1@user.com",
         isAdmin: false,
+        jobs:[],
       },
     });
   });
@@ -312,10 +314,20 @@ describe("DELETE /users/:username", function () {
   });
 
   // New Test
-  test("unauth, not admin", async function () {
+  test("unauth, not admin", async () => {
     const resp = await request(app)
       .delete(`/users/u1`)
       .set("authorization", `Bearer ${u1Token}`);
     expect(resp.statusCode).toBe(401);
+  });
+});
+
+describe("Apply for job", () => {
+  test("works", async () => {
+    const jobs = await Job.findAll();
+    const response = await request(app)
+      .post(`/users/u1/jobs/${jobs[0].id}`)
+      .set("authorization", `Bearer ${u2Token}`);
+    expect(response.statusCode).toBe(200);
   });
 });

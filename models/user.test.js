@@ -140,6 +140,7 @@ describe("get", function () {
       lastName: "U1L",
       email: "u1@email.com",
       isAdmin: false,
+      jobs: [],
     });
   });
 
@@ -214,8 +215,7 @@ describe("update", function () {
 describe("remove", function () {
   test("works", async function () {
     await User.remove("u1");
-    const res = await db.query(
-        "SELECT * FROM users WHERE username='u1'");
+    const res = await db.query("SELECT * FROM users WHERE username='u1'");
     expect(res.rows.length).toEqual(0);
   });
 
@@ -226,5 +226,20 @@ describe("remove", function () {
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();
     }
+  });
+});
+
+describe("apply", () => {
+  test("works", async () => {
+    const result = await User.apply("u1", 1);
+    expect(result).toEqual({ applied: 1 });
+  });
+});
+
+describe("User's job applications", () => {
+  test("works", async () => {
+    await User.apply("u1", 1);
+    const result = await User.jobs("u1");
+    expect(result).toEqual([{ jobId: 1 }]);
   });
 });
