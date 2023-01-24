@@ -27,15 +27,36 @@ class Job {
   }
   static async findAll() {
     const results = await db.query(
-        `SELECT id,
-                title,
-                salary,
-                equity,
-                company_handle AS "companyHandle"
-             FROM jobs
-             ORDER BY title`
+      `SELECT id, title, salary, equity, company_handle AS "companyHandle"
+        FROM jobs
+        ORDER BY title`
+    );
+    return results.rows;
+  }
+  static async search(title, minSalary, equity) {
+    if (typeof title !== "string") throw new BadRequestError("Invalid input!");
+    if (typeof minSalary !== "number") throw new BadRequestError("Invalid input!");
+    if (typeof equity !== "boolean") throw new BadRequestError("Invalid input!");
+    if (equity === true) {
+      const results = await db.query(
+        `SELECT id, title, salary, equity, company_handle AS "companyHandle"
+            FROM jobs
+            WHERE salary > $1 AND equity > 0 AND title ILIKE $2
+            ORDER BY salary`,
+        [minSalary, `%${title}%`]
       );
       return results.rows;
+    } else {
+      const results = await db.query(
+        `SELECT id, title, salary, equity, company_handle AS "companyHandle"
+            FROM jobs
+            WHERE salary > $1
+            AND title ILIKE $2
+            ORDER BY salary`,
+        [minSalary, title]
+      );
+      return results;
+    }
   }
 }
 

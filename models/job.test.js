@@ -77,3 +77,18 @@ describe("find all jobs", () => {
     ]);
   });
 });
+
+describe("Search for jobs", () => {
+  test("equity is true", async () => {
+    let jobs = await Job.search("", 0, true);
+    expect(jobs).toEqual([
+      {
+        id: expect.any(Number),
+        title: "testJob2",
+        salary: 100000,
+        equity: 0.091,
+        companyHandle: "c2",
+      },
+    ]);
+  });
+});
