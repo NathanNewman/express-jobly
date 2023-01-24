@@ -99,6 +99,15 @@ describe("get", function () {
       description: "Desc1",
       numEmployees: 1,
       logoUrl: "http://c1.img",
+      jobs: [
+        { id: expect.any(Number), title: "testJob1", salary: 50000, equity: 0 },
+        {
+          id: expect.any(Number),
+          title: "testJob3",
+          salary: 100000,
+          equity: 0,
+        },
+      ],
     });
   });
 
@@ -235,5 +244,19 @@ describe("User's company query", () => {
     } catch (err) {
       expect(err instanceof BadRequestError).toBeTruthy();
     }
+  });
+});
+
+describe("Company's jobs", () => {
+  test("works", async () => {
+    const res = await Company.jobs("c2");
+    expect(res).toEqual([
+      {
+        id: expect.any(Number),
+        title: "testJob2",
+        salary: 100000,
+        equity: 0.091,
+      },
+    ]);
   });
 });

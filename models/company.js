@@ -77,10 +77,12 @@ class Company {
       [handle]
     );
 
-    const company = companyRes.rows[0];
+    let company = companyRes.rows[0];
 
     if (!company) throw new NotFoundError(`No company: ${handle}`);
 
+    const jobs = await Company.jobs(company.handle);
+    company.jobs = jobs;
     return company;
   }
 
@@ -163,6 +165,16 @@ class Company {
       );
       return result.rows
     } else throw new BadRequestError("Invalid input!");
+  }
+
+  static async jobs(handle) {
+    const results = await db.query(
+      `SELECT id, title, salary, equity
+      FROM jobs
+      WHERE company_handle = $1`,
+      [handle]
+    );
+    return results.rows;
   }
 }
 

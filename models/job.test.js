@@ -27,19 +27,8 @@ describe("create new job", () => {
     companyHandle: "c1",
   };
   test("works", async () => {
-    const job = await Job.create(
-      newJob.title,
-      newJob.salary,
-      newJob.equity,
-      newJob.companyHandle
-    );
-    expect(job).toEqual({
-      id: expect.any(Number),
-      title: newJob.title,
-      salary: newJob.salary,
-      equity: newJob.equity,
-      companyHandle: newJob.companyHandle,
-    });
+    const job = await Job.create(newJob);
+    expect(job).toEqual(newJob);
 
     const result = await db.query(
       `SELECT id, title, salary, equity, company_handle AS "companyHandle"
@@ -74,6 +63,13 @@ describe("find all jobs", () => {
         equity: 0.091,
         companyHandle: "c2",
       },
+      {
+        id: expect.any(Number),
+        title: "testJob3",
+        salary: 100000,
+        equity: 0,
+        companyHandle: "c1",
+      },
     ]);
   });
 });
@@ -90,5 +86,41 @@ describe("Search for jobs", () => {
         companyHandle: "c2",
       },
     ]);
+  });
+  test("minSalary works", async () => {
+    let jobs = await Job.search("", 75000, false);
+    expect(jobs).toEqual([
+      {
+        id: expect.any(Number),
+        title: "testJob3",
+        salary: 100000,
+        equity: 0,
+        companyHandle: "c1",
+      },
+    ]);
+  });
+  test("Invalid Equity", async () => {
+    try {
+      await Job.search("", 50000, 10);
+      fail();
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
+  });
+  test("Invalid minSalary", async () => {
+    try {
+      await Job.search("", "five", true);
+      fail();
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
+  });
+  test("Invalid title", async () => {
+    try {
+      await Job.search(10, 50000, true);
+      fail();
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
   });
 });
