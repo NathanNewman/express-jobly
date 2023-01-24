@@ -18,29 +18,61 @@ afterAll(commonAfterAll);
 
 /************************************** create */
 
-describe("create", function () {
+describe("create new job", () => {
   const newJob = {
+    id: expect.any(Number),
     title: "New",
     salary: 100000,
     equity: 0,
     companyHandle: "c1",
   };
-  test("works", async function () {
-    let job = await Job.create(newJob.title, newJob.salary, newJob.equity, newJob.companyHandle);
-    expect(job).toEqual(newJob);
+  test("works", async () => {
+    const job = await Job.create(
+      newJob.title,
+      newJob.salary,
+      newJob.equity,
+      newJob.companyHandle
+    );
+    expect(job).toEqual({
+      id: expect.any(Number),
+      title: newJob.title,
+      salary: newJob.salary,
+      equity: newJob.equity,
+      companyHandle: newJob.companyHandle,
+    });
 
     const result = await db.query(
-      `SELECT id, name, salary, equity, company_handle
-           FROM companies
-           WHERE name = 'New'`
+      `SELECT id, title, salary, equity, company_handle AS "companyHandle"
+           FROM jobs
+           WHERE title = 'New'`
     );
-    expect(result.rows).toEqual([
+    expect(result.rows[0]).toEqual({
+      id: expect.any(Number),
+      title: "New",
+      salary: 100000,
+      equity: 0,
+      companyHandle: "c1",
+    });
+  });
+});
+
+describe("find all jobs", () => {
+  test("works", async () => {
+    let jobs = await Job.findAll();
+    expect(jobs).toEqual([
       {
         id: expect.any(Number),
-        name: "New",
-        salary: 100000,
+        title: "testJob1",
+        salary: 50000,
         equity: 0,
-        comapanyHandle: "c1",
+        companyHandle: "c1",
+      },
+      {
+        id: expect.any(Number),
+        title: "testJob2",
+        salary: 100000,
+        equity: 0.091,
+        companyHandle: "c2",
       },
     ]);
   });

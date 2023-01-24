@@ -16,8 +16,6 @@ class Job {
    * Throws BadRequestError if job already in database.
    * */
   static async create(title, salary, equity, companyHandle) {
-    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-    console.log(`${title} : ${salary} : ${equity} : ${companyHandle}`);
     const result = await db.query(
       `INSERT INTO jobs
              (title, salary, equity, company_handle)
@@ -25,8 +23,19 @@ class Job {
              RETURNING id, title, salary, equity, company_handle AS "companyHandle"`,
       [title, salary, equity, companyHandle]
     );
-    console.log(result.rows[0]);
     return result.rows[0];
+  }
+  static async findAll() {
+    const results = await db.query(
+        `SELECT id,
+                title,
+                salary,
+                equity,
+                company_handle AS "companyHandle"
+             FROM jobs
+             ORDER BY title`
+      );
+      return results.rows;
   }
 }
 
