@@ -45,6 +45,8 @@ describe("create new job", () => {
   });
 });
 
+/************************************* find all */
+
 describe("find all jobs", () => {
   test("works", async () => {
     let jobs = await Job.findAll();
@@ -73,6 +75,8 @@ describe("find all jobs", () => {
     ]);
   });
 });
+
+/************************************************* search */
 
 describe("Search for jobs", () => {
   test("equity is true", async () => {

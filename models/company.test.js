@@ -224,7 +224,9 @@ describe("remove", function () {
   });
 });
 
-describe("User's company query", () => {
+/********************************** search */
+
+describe("Company search", () => {
   test("name", async () => {
     const res = await Company.search("name", "C1");
     expect(res).toEqual([{ name: "C1" }]);
@@ -246,6 +248,8 @@ describe("User's company query", () => {
     }
   });
 });
+
+/*************************************** jobs */
 
 describe("Company's jobs", () => {
   test("works", async () => {

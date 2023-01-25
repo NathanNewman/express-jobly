@@ -247,7 +247,7 @@ describe("PATCH /companies/:handle", function () {
     expect(resp.statusCode).toEqual(400);
   });
 
-  // New Test
+  // New test
   test("works for users", async function () {
     const resp = await request(app)
       .patch(`/companies/c1`)

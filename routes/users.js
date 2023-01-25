@@ -24,7 +24,7 @@ const router = express.Router();
  * This returns the newly created user and an authentication token for them:
  *  {user: { username, firstName, lastName, email, isAdmin }, token }
  *
- * Authorization required: login
+ * Authorization required: login and admin
  **/
 
 router.post("/", ensureLoggedIn, isAdmin, async function (req, res, next) {
@@ -48,7 +48,7 @@ router.post("/", ensureLoggedIn, isAdmin, async function (req, res, next) {
  *
  * Returns list of all users.
  *
- * Authorization required: login
+ * Authorization required: login and admin
  **/
 
 router.get("/", ensureLoggedIn, isAdmin, async function (req, res, next) {
@@ -85,7 +85,7 @@ router.get("/:username", ensureLoggedIn, async function (req, res, next) {
  *
  * Returns { username, firstName, lastName, email, isAdmin }
  *
- * Authorization required: login
+ * Authorization required: login and admin
  **/
 
 router.patch("/:username", ensureLoggedIn, isAdmin, async function (req, res, next) {
@@ -106,7 +106,7 @@ router.patch("/:username", ensureLoggedIn, isAdmin, async function (req, res, ne
 
 /** DELETE /[username]  =>  { deleted: username }
  *
- * Authorization required: login
+ * Authorization required: login and admin
  **/
 
 router.delete("/:username", ensureLoggedIn, isAdmin, async function (req, res, next) {
@@ -117,6 +117,11 @@ router.delete("/:username", ensureLoggedIn, isAdmin, async function (req, res, n
     return next(err);
   }
 });
+
+/** POST /[username]/jobs/[job id] => { applied : (job id) }
+ * 
+ * Authorization required: login
+*/
 
 router.post("/:username/jobs/:id", ensureLoggedIn, async (req, res, next) => {
   try {

@@ -9,7 +9,7 @@ const { sqlForPartialUpdate } = require("../helpers/sql");
 class Job {
   /** Create a job (from data), update db, return new job data.
    *
-   * data should be { id, title, salary, equity, company_handle }
+   * data should be { title, salary, equity, company_handle }
    *
    * Returns { id, title, salary, equity, company_handle }
    *
@@ -25,6 +25,9 @@ class Job {
     );
     return result.rows[0];
   }
+
+  /** Returns an array of all jobs in the database. */
+
   static async findAll() {
     const results = await db.query(
       `SELECT id, title, salary, equity, company_handle AS "companyHandle"
@@ -33,6 +36,15 @@ class Job {
     );
     return results.rows;
   }
+
+  /** Search for jobs filtering by title, minSalary, and equity.
+   * 
+   * First, method checks to make sure each input is of the correct type or throws a BadRequestError.
+   * 
+   * If equity is true, filters by all three. If equity is false, filters by title and minSalary.
+   * 
+   * Returns an array of jobs.
+   */ 
   static async search(title, minSalary, equity) {
     if (typeof title !== "string") throw new BadRequestError("Invalid input!");
     if (typeof minSalary !== "number") throw new BadRequestError("Invalid input!");

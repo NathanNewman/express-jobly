@@ -229,6 +229,8 @@ describe("remove", function () {
   });
 });
 
+/****************************************** apply */
+
 describe("apply", () => {
   test("works", async () => {
     const result = await User.apply("u1", 1);
@@ -236,7 +238,9 @@ describe("apply", () => {
   });
 });
 
-describe("User's job applications", () => {
+/****************************************** jobs */
+
+describe("jobs", () => {
   test("works", async () => {
     await User.apply("u1", 1);
     const result = await User.jobs("u1");

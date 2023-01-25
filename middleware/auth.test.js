@@ -77,10 +77,7 @@ describe("ensureLoggedIn", function () {
   });
 });
 
-/** Tests the isAdmin middleware
- *
- *
- */
+/** Tests the isAdmin middleware */
 describe("isAdmin", () => {
   const req = {};
   test("Should call next if user is admin", () => {

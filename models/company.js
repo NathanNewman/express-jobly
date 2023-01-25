@@ -81,6 +81,7 @@ class Company {
 
     if (!company) throw new NotFoundError(`No company: ${handle}`);
 
+    // adds list of jobs for company
     const jobs = await Company.jobs(company.handle);
     company.jobs = jobs;
     return company;
@@ -139,6 +140,12 @@ class Company {
     if (!company) throw new NotFoundError(`No company: ${handle}`);
   }
 
+  /** Method for searching companies
+   * 
+   * checks to see if filter type is minEmployees, maxEmployees, or name and then filters accordingly
+   * if not returns BadRequestError.
+   */
+
   static async search(type, str) {
     if (type === "minEmployees") {
       const result = await db.query(
@@ -166,6 +173,11 @@ class Company {
       return result.rows
     } else throw new BadRequestError("Invalid input!");
   }
+
+/** Method for getting a list of a company's jobs
+ * 
+ * Used above in the get() method.
+ */
 
   static async jobs(handle) {
     const results = await db.query(

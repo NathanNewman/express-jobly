@@ -322,6 +322,8 @@ describe("DELETE /users/:username", function () {
   });
 });
 
+/************************************************* POST /users/:username/jobs/:id */
+
 describe("Apply for job", () => {
   test("works", async () => {
     const jobs = await Job.findAll();

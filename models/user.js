@@ -138,6 +138,7 @@ class User {
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
+    // Adds an array of jobs to user data.
     const jobs = await User.jobs(username);
     user.jobs = jobs
 
@@ -205,6 +206,11 @@ class User {
     if (!user) throw new NotFoundError(`No user: ${username}`);
   }
 
+  /** Allows users to apply for a job.
+   * 
+   * Adds username and job id to the applications table.
+   */
+
   static async apply(username, jobId) {
     const result = await db.query(
       `INSERT INTO applications
@@ -216,6 +222,11 @@ class User {
     return { applied: jobId };
   }
 
+  /** Creates an array of jobs that the user has applied to.
+   * 
+   * Used above in the get() method.
+   */
+
   static async jobs(username) {
     const results = await db.query(
       `SELECT job_id AS "jobId"
@@ -223,7 +234,6 @@ class User {
       WHERE username = $1`,
       [username]
     );
-    console.log(results.rows);
     return results.rows;
   }
 }
